@@ -27,5 +27,5 @@ bench:
 
 threadscope:
 	stack build
-	-stack exec -- $(EXECUTABLE) +RTS -ls -s -RTS $(ARGS)
+	-stack exec -- $(EXECUTABLE) +RTS -ls -lf -s -RTS $(ARGS)
 	threadscope $(EXECUTABLE).eventlog

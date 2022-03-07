@@ -117,18 +117,18 @@ wrids n p (Node a l) = if p a then ("Lalala"++(prlist "?" a)++rest,nds) else (re
 			       (map (wrids (n-1) p) l)
 
 wrids2 :: Int -> (State -> Maybe String) -> Tree State -> (String,Int)
-wrids2 0 p (Node a l) = 
-   let isAttack = (p ( a)) in
-   if (isJust isAttack) then ('*':(fromJust isAttack),1) else (nothing_found,1)
+wrids2 0 p (Node a l) = case p a of
+  Just att -> ('*' : att, 1) 
+  Nothing -> (nothing_found, 1)
 wrids2 n p (Node a l) =
-   let isAttack = (p ( a)) in
-   if (isJust isAttack) then ('*':(fromJust isAttack),nds) else (rest,nds)
-      where (rest,nds) = foldr (\ (s1,i1) (s2,i2) -> 
-					case s1 of 
-					 '*':s1' -> (s1,i1)
-					 _ -> (s2,i1+i2))
-			       ("",0)
-			       (parMap rdeepseq (wrids2 (n-1) p) l)
+   case p a of
+    Just att -> ('*': att, nds)
+    Nothing -> (rest, nds)
+    where 
+      (rest, nds) = foldr go ("", 0) (parMap rdeepseq (wrids2 (n - 1) p) l)
+      go (s1, i1) (s2, i2) = case s1 of 
+        '*' : _ -> (s1, i1)
+        _       -> (s2, i1 + i2)
 
 
 type Statistics = (Int,Int)
