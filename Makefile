@@ -18,8 +18,8 @@ src/%.hs : resources/%.x
 	${ALEX} ${ALEX_OPTS} $< -o $@
 
 clean: 
-	rm $(GENERATED) && \
-	rm -f *.aux *.hp *.ps *.eventlog *.prof *.prof.html *.svg
+	-rm $(GENERATED)
+	-rm -f *.aux *.hp *.ps *.eventlog *.prof *.prof.html *.svg
 
 bench:
 	stack build
@@ -27,5 +27,5 @@ bench:
 
 threadscope:
 	stack build
-	stack exec -- $(EXECUTABLE) +RTS -ls -s -RTS $(ARGS)
+	-stack exec -- $(EXECUTABLE) +RTS -ls -s -RTS $(ARGS)
 	threadscope $(EXECUTABLE).eventlog

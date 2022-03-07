@@ -157,24 +157,26 @@ nothing_found_bound = "No attacks found.%(reached depth restriction)\n"
 reached_balance = "neusuch: reached balance.\n"
 
 neusuch theo must por rules hcs predicate balance 0 _ _ stats
- = (nothing_found,stats) --- was: nothing_found_bound
-neusuch theo must por rules hcs predicate balance depth sfb ([],[]) stats
- = (nothing_found,stats)
-neusuch theo must por rules hcs predicate balance depth sfb ([],l) stats
- = neusuch theo must por rules hcs predicate balance (depth-1) sfb (reverse l,[]) 
-   (inc_depth stats)
-neusuch theo must por rules hcs p balance depth sfb (x:xs,ys) stats
- = let isAttack = (p (snd x)) in
-   if (isJust isAttack) then (fromJust isAttack, stats) 
-   else let succ_x = if must then error "MUST CURRENTLY not supported" else --- successor_must theo else 
-   	    	     successorHC hcs theo por sfb rules x 
-            isAttack = (listToMaybe . catMaybes . (map (p . snd))) succ_x
-        in if (isJust isAttack) then (fromJust isAttack,stats) else
-	   if (((length succ_x) < balance))
-	   then neusuch theo must por rules  hcs p (balance-(length succ_x)+1) depth sfb 
-		   (xs, (reverse succ_x) ++ ys) (inc_vip stats)
-	   else (reached_balance,stats)
+ = (nothing_found, stats) --- was: nothing_found_bound
 
+neusuch theo must por rules hcs predicate balance depth sfb ([], []) stats
+ = (nothing_found, stats)
+
+neusuch theo must por rules hcs predicate balance depth sfb ([], l) stats
+ = neusuch theo must por rules hcs predicate balance (depth - 1) sfb (reverse l, []) (inc_depth stats)
+
+neusuch theo must por rules hcs p balance depth sfb (xs', ys) (s1, s2)
+ = let xs = take balance xs'
+       results = catMaybes $ parMap rdeepseq (p . snd) xs
+       successors = if must then error "MUST CURRENTLY not supported" else
+                          concatMap (successorHC hcs theo por sfb rules) xs
+       newBalance = balance - length xs
+    in case results of
+      (att : _) -> (att, (s1, s2))
+      [] ->
+        if length xs' >= balance
+          then (reached_balance, (s1 + length xs, s2))
+          else neusuch theo must por rules hcs p newBalance (depth - 1) sfb (successors, ys) (s1 + length xs, s2 + 1)
 
 exec_check0 :: AlgTheo -> Bool -> [Int -> Rule] -> (State -> Maybe [Fact]) -> Int -> Int -> Int ->
    ([(Int,State)],[(Int,State)]) -> Statistics -> (Maybe [Fact],Statistics)
