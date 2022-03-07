@@ -15,6 +15,7 @@ dependencies:
 - base >= 4.7 && < 5
 - containers
 - array
+- parallel
 
 default-extensions:
 - ScopedTypeVariables
@@ -24,15 +25,15 @@ ghc-options:
 - -O2
 - -Wno-tabs
 - -fspec-constr-count=5
-# - -eventlog
-# - -fprof-auto
-# - -fno-prof-count-entries
+- -eventlog
+- -fprof-auto
+- -fno-prof-count-entries
 
 library:
   source-dirs: src
 
 executables:
-  ofmc-parallel-exe:
+  ofmc-parallel:
     main:                Main.hs
     source-dirs:         app
     ghc-options:

@@ -20,6 +20,7 @@ import Data.Maybe
 import Data.List
 import Constants
 import Decomposition
+import Control.Parallel.Strategies
 
 varstart=221
 
@@ -127,7 +128,7 @@ wrids2 n p (Node a l) =
 					 '*':s1' -> (s1,i1)
 					 _ -> (s2,i1+i2))
 			       ("",0)
-			       (map (wrids2 (n-1) p) l)
+			       (parMap rdeepseq (wrids2 (n-1) p) l)
 
 
 type Statistics = (Int,Int)

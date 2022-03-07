@@ -12,3 +12,7 @@ src/TheoParser.hs
 
 # MacOS
 .DS_Store
+
+# Profiling
+*.eventlog
+sources/test.AnB

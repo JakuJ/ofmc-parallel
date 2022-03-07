@@ -56,14 +56,15 @@ library
   default-extensions:
       ScopedTypeVariables
       NoMonomorphismRestriction
-  ghc-options: -O2 -Wno-tabs -fspec-constr-count=5
+  ghc-options: -O2 -Wno-tabs -fspec-constr-count=5 -eventlog -fprof-auto -fno-prof-count-entries
   build-depends:
       array
     , base >=4.7 && <5
     , containers
+    , parallel
   default-language: Haskell2010
 
-executable ofmc-parallel-exe
+executable ofmc-parallel
   main-is: Main.hs
   other-modules:
       Paths_ofmc_parallel
@@ -72,10 +73,11 @@ executable ofmc-parallel-exe
   default-extensions:
       ScopedTypeVariables
       NoMonomorphismRestriction
-  ghc-options: -O2 -Wno-tabs -fspec-constr-count=5 -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -O2 -Wno-tabs -fspec-constr-count=5 -eventlog -fprof-auto -fno-prof-count-entries -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       array
     , base >=4.7 && <5
     , containers
     , ofmc-parallel
+    , parallel
   default-language: Haskell2010
