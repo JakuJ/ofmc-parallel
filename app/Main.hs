@@ -11,6 +11,7 @@ Open Source Fixedpoint Model-Checker version 2020
 All Rights Reserved.
 
 -}
+module Main where
 
 import AnBmain
 import AnBOnP

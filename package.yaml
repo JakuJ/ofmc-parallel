@@ -13,6 +13,20 @@ description:         Please see the README on GitHub at <https://github.com/Jaku
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
+- array
+
+default-extensions:
+- ScopedTypeVariables
+- NoMonomorphismRestriction
+
+ghc-options:
+- -O2
+- -Wno-tabs
+- -fspec-constr-count=5
+# - -eventlog
+# - -fprof-auto
+# - -fno-prof-count-entries
 
 library:
   source-dirs: src

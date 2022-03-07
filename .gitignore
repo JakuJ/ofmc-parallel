@@ -1,3 +1,14 @@
+# Haskell
 .stack-work/
 *~
+
+# Generated
+src/AnBParser.hs
+src/Lexer.hs
+src/NewIfLexer.hs
+src/NewIfParser.hs
+src/TheoLexer.hs
+src/TheoParser.hs
+
+# MacOS
 .DS_Store

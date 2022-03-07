@@ -1,48 +1,41 @@
-DIRS = cj/6.1-Sym-Key-no-TTP cj/6.2-Auth-CCF cj/6.3-Sym-Key-TTp cj/6.6-Pub-Key-no-TTP cj/6.7-6.9-Pub-Key-TTP classic/
-
-SRCFILES = AnBmain.hs FPTranslator.hs AnBOnP.hs Msg.hs LMsg.hs MsgPat.hs AnBParser.y Lexer.x Ast.hs NewIfLexer.x TheoLexer.x TheoParser.y Constants.hs IntsOnly.hs Decomposition.hs MsgTree.hs Remola.hs Symbolic.hs NewIfParser.y Search.hs TheoLoad.hs PrettyUgly.hs Main.hs Translator.hs StateMonad.hs StateMonad.hs If2Horn.hs
-
-GENERATED = NewIfLexer.hs NewIfParser.hs TheoLexer.hs TheoParser.hs Lexer.hs AnBParser.hs
+GENERATED = src/NewIfLexer.hs src/NewIfParser.hs src/TheoLexer.hs src/TheoParser.hs src/Lexer.hs src/AnBParser.hs
 
 ########################
 
-all:	
-	make ofmc
+.PHONY: ofmc
+
+ofmc: $(GENERATED)
+	stack build
 
 ########################
 
-ofmc:	$(SRCFILES) $(GENERATED)
-	ghc -XNoMonomorphismRestriction -XScopedTypeVariables -fspec-constr-count=5 -static -package base --make -O2 -Wno-tabs Main.hs -o ofmc
+src/NewIfLexer.hs: resources/NewIfLexer.x
+	alex resources/NewIfLexer.x -o src/NewIfLexer.hs
 
 ########################
 
-NewIfLexer.hs:	NewIfLexer.x
-	alex NewIfLexer.x
+src/NewIfParser.hs:	resources/NewIfParser.y
+	happy resources/NewIfParser.y -o src/NewIfParser.hs
 
 ########################
 
-NewIfParser.hs:	NewIfParser.y
-	happy -ioutput  NewIfParser.y
+src/TheoLexer.hs: resources/TheoLexer.x
+	alex resources/TheoLexer.x -o src/TheoLexer.hs
 
 ########################
 
-TheoLexer.hs:	TheoLexer.x
-	alex TheoLexer.x
+src/TheoParser.hs: resources/TheoParser.y
+	happy resources/TheoParser.y -o src/TheoParser.hs
 
 ########################
 
-TheoParser.hs:	TheoParser.y
-	happy -ioutput  TheoParser.y
+src/Lexer.hs: resources/Lexer.x
+	alex resources/Lexer.x -o src/Lexer.hs
 
 ########################
 
-Lexer.hs:	Lexer.x
-	alex Lexer.x
-
-########################
-
-AnBParser.hs:	AnBParser.y
-	happy -ioutput  AnBParser.y
+src/AnBParser.hs: resources/AnBParser.y
+	happy resources/AnBParser.y -o src/AnBParser.hs
 
 ########################
 
