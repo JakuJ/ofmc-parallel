@@ -1,0 +1,72 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           ofmc-parallel
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/JakuJ/ofmc-parallel#readme>
+homepage:       https://github.com/JakuJ/ofmc-parallel#readme
+bug-reports:    https://github.com/JakuJ/ofmc-parallel/issues
+author:         Jakub Janaszkiewicz
+maintainer:     janaszkiewicz.jakub@gmail.com
+copyright:      2022 Jakub Janaszkiewicz
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/JakuJ/ofmc-parallel
+
+library
+  exposed-modules:
+      AnBmain
+      AnBOnP
+      AnBParser
+      Ast
+      Constants
+      Decomposition
+      FPTranslator
+      If2Horn
+      IntsOnly
+      Lexer
+      LMsg
+      Msg
+      MsgPat
+      MsgTree
+      NewIfLexer
+      NewIfParser
+      PrettyUgly
+      Remola
+      Search
+      StateMonad
+      Symbolic
+      Term
+      TheoLexer
+      TheoLoad
+      TheoParser
+      Translator
+      Unifiable
+  other-modules:
+      Paths_ofmc_parallel
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable ofmc-parallel-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_ofmc_parallel
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , ofmc-parallel
+  default-language: Haskell2010
