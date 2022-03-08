@@ -25,15 +25,16 @@ ghc-options:
 - -O2
 - -Wno-tabs
 - -fspec-constr-count=5
-- -eventlog
-- -fprof-auto
-- -fno-prof-count-entries
+# UNCOMMENT TO ENABLE PROFILING:
+# - -eventlog
+# - -fprof-auto
+# - -fno-prof-count-entries
 
 library:
   source-dirs: src
 
 executables:
-  ofmc-parallel:
+  ofmc:
     main:                Main.hs
     source-dirs:         app
     ghc-options:

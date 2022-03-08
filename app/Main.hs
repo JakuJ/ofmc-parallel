@@ -37,7 +37,7 @@ import FPTranslator
 import GHC.IO.Handle
 import qualified Data.Map as Map
 
-productname = "Open-Source Fixedpoint Model-Checker version 2020\n"
+productname = "Open-Source Fixedpoint Model-Checker version 2020 (with parallel processing)\n"
 
 usage =    "usage: ofmc [<OPTIONS>] <INPUT FILE>\n"
 	++ "Options:\n"

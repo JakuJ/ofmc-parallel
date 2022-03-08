@@ -3,7 +3,7 @@ HAPPY_OPTS = --array --ghc --coerce
 ALEX       = alex
 ALEX_OPTS  = --ghc
 GENERATED = src/NewIfLexer.hs src/NewIfParser.hs src/TheoLexer.hs src/TheoParser.hs src/Lexer.hs src/AnBParser.hs
-EXECUTABLE = ofmc-parallel
+EXECUTABLE = ofmc
 ARGS 	   = --numSess 2 sources/test.AnB
 
 .PHONY: ofmc clean

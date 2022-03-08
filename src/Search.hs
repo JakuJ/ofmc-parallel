@@ -2,6 +2,7 @@
 
 Open Source Fixedpoint Model-Checker version 2020
 
+(C) Copyright Jakub Janaszkiewicz 2022
 (C) Copyright Sebastian Moedersheim 2003,2020
 (C) Copyright Paolo Modesti 2012
 (C) Copyright IBM Corp. 2009
