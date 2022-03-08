@@ -1,3 +1,4 @@
+STACK 	   = stack
 HAPPY      = happy
 HAPPY_OPTS = --array --ghc --coerce
 ALEX       = alex
@@ -9,7 +10,7 @@ ARGS 	   = --numSess 2 sources/test.AnB
 .PHONY: ofmc clean
 
 ofmc: $(GENERATED)
-	stack build
+	${STACK} build
 
 src/%.hs : resources/%.y
 	${HAPPY} ${HAPPY_OPTS} $< -o $@
@@ -22,10 +23,10 @@ clean:
 	-rm -f *.aux *.hp *.ps *.eventlog *.prof *.prof.html *.svg
 
 bench:
-	stack build
-	stack exec -- $(EXECUTABLE) +RTS -s -RTS $(ARGS)
+	${STACK} build
+	${STACK} exec -- $(EXECUTABLE) +RTS -s -RTS $(ARGS)
 
 threadscope:
-	stack build
-	-stack exec -- $(EXECUTABLE) +RTS -ls -lf -s -RTS $(ARGS)
+	${STACK} build
+	-${STACK} exec -- $(EXECUTABLE) +RTS -ls -lf -s -RTS $(ARGS)
 	threadscope $(EXECUTABLE).eventlog
