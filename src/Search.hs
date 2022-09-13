@@ -12,6 +12,8 @@ All Rights Reserved.
 
 -}
 
+{-# LANGUAGE BangPatterns #-}
+
 module Search where
 import IntsOnly
 import Remola
@@ -148,7 +150,7 @@ show_stats (vip,depth) = if vip==0 then "" else
                          ++"  depth: "++(show depth)++" plies\n"
 
 neusuch :: AlgTheo -> Bool -> [Int -> Rule] -> [Hornclause] -> (State -> Maybe String) -> Int -> Int -> Int ->
-   ([(Int,State)],[(Int,State)]) -> (String,Statistics)
+   [(Int,State)] -> (String,Statistics)
 --- given a rule set, an attack predicate, a max. number of states in
 --- memory, a max. depth bound and a list of trees. Perform breadth-first search
 --- until reaching the max. number, then proceed with depth first search.
@@ -170,18 +172,24 @@ neusuch' theo por rules hcs predicate 0 depth _ _
  = (reached_balance, (0, depth))
 
 -- queue empty
-neusuch' theo por rules hcs predicate balance depth sfb ([], [])
+neusuch' theo por rules hcs predicate balance depth sfb []
  = (nothing_found, (balance, depth))
 
--- next level in the tree
-neusuch' theo por rules hcs predicate balance depth sfb ([], l)
-  = neusuch' theo por rules hcs predicate balance (depth - 1) sfb (reverse l, [])
+-- process entire layer at once
+neusuch' theo por rules hcs p balance depth sfb xs = 
+  let (seen, attack) = findAttack 0 $ parMap rdeepseq (p . snd) $ take balance xs
+      successors = concatMap (successorHC hcs theo por sfb rules) xs
+    in case attack of
+      Just att -> (att, (balance - seen, depth))
+      Nothing ->
+        if seen < balance
+          then neusuch' theo por rules hcs p (balance - seen) (depth - 1) sfb successors
+          else (reached_balance, (balance - seen, depth))
 
-neusuch' theo por rules hcs p balance depth sfb (x : xs, ys)
-  = case p (snd x) of
-      Just attack -> (attack, (balance, depth))
-      Nothing -> let succ_x = successorHC hcs theo por sfb rules x
-                  in neusuch' theo por rules hcs p (balance - 1) depth sfb (xs, reverse succ_x ++ ys)
+findAttack :: Int -> [Maybe a] -> (Int, Maybe a)
+findAttack acc [] = (acc, Nothing)
+findAttack !acc (Nothing : xs) = findAttack (acc + 1) xs
+findAttack !acc (Just x : xs) = (acc + 1, Just x)
 
 exec_check0 :: AlgTheo -> Bool -> [Int -> Rule] -> (State -> Maybe [Fact]) -> Int -> Int -> Int ->
    ([(Int,State)],[(Int,State)]) -> Statistics -> (Maybe [Fact],Statistics)
