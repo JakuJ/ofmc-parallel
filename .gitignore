@@ -15,4 +15,6 @@ src/TheoParser.hs
 
 # Profiling
 *.eventlog
+*.eventlog.html
 sources/test.AnB
+*.hp

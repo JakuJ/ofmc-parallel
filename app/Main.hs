@@ -546,7 +546,7 @@ core algTheo onp
    (case (pth,depthb) of
       (Nothing,Nothing) -> 
 	  let (str,stats) =
-	         (neusuch algTheo must cd rules horntheo (general_attack_check algTheo cd goals) 
+	         (neusuch algTheo cd rules horntheo (general_attack_check algTheo cd goals) 
                   nodemax depthbound 
 	          sfb ([(varstart,newstate)],[]) init_stats) in
           if (str==reached_balance) then  

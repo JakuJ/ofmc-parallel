@@ -30,3 +30,9 @@ threadscope:
 	${STACK} build
 	-${STACK} exec -- $(EXECUTABLE) +RTS -ls -lf -s -RTS $(ARGS)
 	threadscope $(EXECUTABLE).eventlog
+
+memory:
+	${STACK} build --profile
+	${STACK} exec --profile -- $(EXECUTABLE) +RTS -hc -L200 -i0.01 -l-au -RTS $(ARGS)
+	eventlog2html $(EXECUTABLE).eventlog
+	open $(EXECUTABLE).eventlog.html
