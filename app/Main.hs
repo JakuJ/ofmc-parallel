@@ -548,7 +548,7 @@ core algTheo onp
 	  let (str,stats) =
 	         (neusuch algTheo cd rules horntheo (general_attack_check algTheo cd goals) 
                   nodemax depthbound 
-	          sfb ([(varstart,newstate)],[]) init_stats) in
+	          sfb ([(varstart,newstate)],[])) in
           if (str==reached_balance) then  
 	      let maxdepth = if isJust depthb then fromJust depthb else depthbound
 	          (a,b) = core algTheo (onp {depth=Just maxdepth}) (init,rules,secr,goals,execCR,horntheo) isNewIF in

@@ -148,7 +148,7 @@ show_stats (vip,depth) = if vip==0 then "" else
                          ++"  depth: "++(show depth)++" plies\n"
 
 neusuch :: AlgTheo -> Bool -> [Int -> Rule] -> [Hornclause] -> (State -> Maybe String) -> Int -> Int -> Int ->
-   ([(Int,State)],[(Int,State)]) -> Statistics -> (String,Statistics)
+   ([(Int,State)],[(Int,State)]) -> (String,Statistics)
 --- given a rule set, an attack predicate, a max. number of states in
 --- memory, a max. depth bound and a list of trees. Perform breadth-first search
 --- until reaching the max. number, then proceed with depth first search.
@@ -157,27 +157,31 @@ nothing_found = "No attacks found.\n"
 nothing_found_bound = "No attacks found.%(reached depth restriction)\n"
 reached_balance = "neusuch: reached balance.\n"
 
+neusuch theo por rules hcs p balance depth sfb queue =
+  let (result, (balance', depth')) = neusuch' theo por rules hcs p balance depth sfb queue
+  in  (result, (balance - balance', depth - depth'))
+
  -- depth limit reached
-neusuch theo por rules hcs predicate balance 0 _ _ stats
- = (nothing_found, stats)
+neusuch' theo por rules hcs predicate balance 0 _ _
+ = (nothing_found, (balance, 0))
 
  -- balance limit reached, switching to DFS
-neusuch theo por rules hcs predicate 0 _ _ _ stats
- = (reached_balance, stats)
+neusuch' theo por rules hcs predicate 0 depth _ _
+ = (reached_balance, (0, depth))
 
 -- queue empty
-neusuch theo por rules hcs predicate balance depth sfb ([], []) stats
- = (nothing_found, stats)
+neusuch' theo por rules hcs predicate balance depth sfb ([], [])
+ = (nothing_found, (balance, depth))
 
 -- next level in the tree
-neusuch theo por rules hcs predicate balance depth sfb ([], l) stats
-  = neusuch theo por rules hcs predicate balance (depth - 1) sfb (reverse l, []) (inc_depth stats)
+neusuch' theo por rules hcs predicate balance depth sfb ([], l)
+  = neusuch' theo por rules hcs predicate balance (depth - 1) sfb (reverse l, [])
 
-neusuch theo por rules hcs p balance depth sfb (x : xs, ys) stats
+neusuch' theo por rules hcs p balance depth sfb (x : xs, ys)
   = case p (snd x) of
-      Just attack -> (attack, stats)
+      Just attack -> (attack, (balance, depth))
       Nothing -> let succ_x = successorHC hcs theo por sfb rules x
-                  in neusuch theo por rules hcs p (balance - 1) depth sfb (xs, reverse succ_x ++ ys) (inc_vip stats)
+                  in neusuch' theo por rules hcs p (balance - 1) depth sfb (xs, reverse succ_x ++ ys)
 
 exec_check0 :: AlgTheo -> Bool -> [Int -> Rule] -> (State -> Maybe [Fact]) -> Int -> Int -> Int ->
    ([(Int,State)],[(Int,State)]) -> Statistics -> (Maybe [Fact],Statistics)
