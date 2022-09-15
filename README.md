@@ -1,5 +1,7 @@
 # Parallel OFMC
 
+[![CI](https://github.com/JakuJ/ofmc-parallel/actions/workflows/ci.yml/badge.svg)](https://github.com/JakuJ/ofmc-parallel/actions/workflows/ci.yml)
+
 This repository contains the source code for the [Open-source Fixed-point Model Checker](https://www.imm.dtu.dk/~samo/) extended with parallel processing capabilities.
 
 This version of OFMC utilises all available cores during both the BFS and the DFS phases and can achieve massive speedups depending on the number of cores.
