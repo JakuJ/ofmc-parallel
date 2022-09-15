@@ -7,10 +7,12 @@ GENERATED = src/NewIfLexer.hs src/NewIfParser.hs src/TheoLexer.hs src/TheoParser
 EXECUTABLE = ofmc
 ARGS 	   = --numSess 2 sources/test.AnB
 
-.PHONY: ofmc clean
+.PHONY: ofmc clean parser
 
-ofmc: $(GENERATED)
+ofmc: parser
 	${STACK} build
+
+parser: $(GENERATED)
 
 src/%.hs : resources/%.y
 	${HAPPY} ${HAPPY_OPTS} $< -o $@

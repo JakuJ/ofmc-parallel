@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  stack:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            bin-name: linux-x86
+          - os: macos-latest
+            bin-name: macos-x86
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: haskell/actions/setup@v1
+      name: Setup Haskell Stack
+      with:
+        ghc-version: 9.2.2
+        enable-stack: true
+        stack-version: 'latest'
+
+    - name: Install Alex and Happy
+      run: |
+        stack install alex
+        stack install happy
+
+    - uses: actions/cache@v2.1.3
+      name: Cache ~/.stack
+      with:
+        path: ~/.stack
+        key: ${{ matrix.os }}-9.2.2-stack
+
+    - name: Generate parser
+      run: |
+        export PATH="$(stack path --local-bin):$PATH"
+        make parser
+
+    - name: Install dependencies
+      run: |
+        stack build --system-ghc --only-dependencies
+
+    - name: Build
+      run: |
+        stack build --system-ghc
+
+    - name: Prepare binary
+      run: |
+        zip -j ~/${{ matrix.bin-name }}.zip "$(stack path --system-ghc --local-install-root)/bin/ofmc"
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.bin-name }}.zip
+        path: ~/${{ matrix.bin-name }}.zip
